@@ -80,9 +80,10 @@ function Login(props) {
 								</div>
 								<div className="form-group">
 									<label className="mb-2 "><strong className="">Password</strong></label>
-									<input type="password" className="form-control" name='password'  value={formData.password} onChange={handleChange} placeholder='password' />
+									<input type="password" className="form-control" name='password'  value={formData.password} onChange={handleChange} placeholder='' />
 									{errors.password && <div className="text-danger fs-12">{errors.password}</div>}
 								</div>
+								
 								<div className="form-row d-flex justify-content-between mt-4 mb-2">
 									<div className="form-group">
 										<div className="custom-control custom-checkbox ms-1 ">

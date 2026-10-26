@@ -5,17 +5,26 @@ import {
     Logout,
 } from '../store/actions/AuthActions';
 
-export function signUp(email, password) {
+export function signUp(name,email, password) {
     //axios call
-    const postData = {
-        email,
-        password,
-        returnSecureToken: true,
-    };
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    // const postData = {
+    //     name,
+    //     email,
+    //     password,
+    //     returnSecureToken: true,
+    // };
+
+    const body = JSON.stringify({name, email, password });
     return axios.post(
         // `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
         'http://localhost:5001/api/users',
-        postData,
+        body,
+        config
     );
 }
 

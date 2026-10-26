@@ -85,7 +85,18 @@ function Register(props) {
                                             />
                                         </div>
                                         {errors.password && <div className="text-danger fs-12">{errors.password}</div>}
-                                        <div className='text-center mt-4'>
+                                        <div className='form-group'>
+                                            <label className='mb-1 '>
+                                              <strong>Password</strong>
+                                            </label>
+                                            <input type="password" className="form-control"
+                                                value={password}
+                                                onChange={(e) =>
+                                                    setPassword(e.target.value)
+                                                }
+                                            />
+                                        </div>
+                                       <div className='text-center mt-4'>
                                             <input type='submit' className='btn btn-primary btn-block'/>
                                         </div>
                                     </form>

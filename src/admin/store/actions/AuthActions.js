@@ -36,7 +36,7 @@ export function signupAction(email, password, navigate) {
 			//history.push('/dashboard');
         })
         .catch((error) => {
-            const errorMessage = formatError(error.response.data);
+            const errorMessage = formatError(error);
             dispatch(signupFailedAction(errorMessage));
         });
     };
@@ -56,12 +56,13 @@ export function loginAction(email, password, navigate) {
     return (dispatch) => {
          login(email, password)
             .then((response) => { 
+                console.log(response)
                 saveTokenInLocalStorage(response.data);
-                runLogoutTimer(
-                    dispatch,
-                    response.data.expiresIn * 1000,
-                    navigate,
-                );
+                // runLogoutTimer(
+                //     dispatch,
+                //     response.data.expiresIn * 1000,
+                //     navigate,
+                // );
                dispatch(loginConfirmedAction(response.data));
 			   //console.log('kk------1');
 			   //console.log(kk);
@@ -73,9 +74,8 @@ export function loginAction(email, password, navigate) {
 				navigate('/dashboard');                
             })
             .catch((error) => {
-				//console.log('error');
-				//console.log(error);
-                const errorMessage = formatError(error.response.data);
+                console.log('login action', error);
+                const errorMessage = formatError(error);
                 dispatch(loginFailedAction(errorMessage));
             });
     };

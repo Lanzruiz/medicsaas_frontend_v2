@@ -1,42 +1,56 @@
 import React, { useState } from 'react'
 import { connect, useDispatch } from 'react-redux';
-import { Link, useNavigate} from 'react-router-dom'
-import { loadingToggleAction,loginAction,
+import { Link, useNavigate } from 'react-router-dom'
+import {
+	loadingToggleAction, loginAction,
 } from '../../store/actions/AuthActions';
 
 //
 import logo from '../../images/logo.png'
 import logotext from '../../images/logo-text-white.png'
 
-function Login (props) {
-    const [email, setEmail] = useState('demo@example.com');
-    let errorsObj = { email: '', password: '' };
-    const [errors, setErrors] = useState(errorsObj);
-    const [password, setPassword] = useState('123456');
-    const dispatch = useDispatch();
-	const nav = useNavigate();
-    function onLogin(e) {
-        e.preventDefault();
-        let error = false;
-        const errorObj = { ...errorsObj };
-        if (email === '') {
-            errorObj.email = 'Email is Required';
-            error = true;
-        }
-        if (password === '') {
-            errorObj.password = 'Password is Required';
-            error = true;
-        }
-        setErrors(errorObj);
-        if (error) {
-			return ;
-		}
-		dispatch(loadingToggleAction(true));	
-        dispatch(loginAction(email, password, nav));
-    }
+function Login(props) {
+	const [formData, setFormData] = useState({
+		email: '',
+		password: '',
+	});
 
-  return (
-  
+	let errorsObj = { email: '', password: '' };
+	const [errors, setErrors] = useState(errorsObj);
+	
+	const dispatch = useDispatch();
+	const nav = useNavigate();
+	function onLogin(e) {
+		e.preventDefault();
+		let error = false;
+		const errorObj = { ...errorsObj };
+		if (formData.email === '') {
+			errorObj.email = 'Email is Required';
+			error = true;
+		}
+		if (formData.password === '') {
+			errorObj.password = 'Password is Required';
+			error = true;
+		}
+		setErrors(errorObj);
+		if (error) {
+			return;
+		}
+		dispatch(loadingToggleAction(true));
+		dispatch(loginAction(formData.email, formData.password, nav));
+	}
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value
+		}));
+	};
+
+	return (
+
 		<div className="login-form-bx">
 			<div className="container-fluid">
 				<div className="row">
@@ -61,18 +75,18 @@ function Login (props) {
 									<label className="mb-2 ">
 										<strong className="">Email</strong>
 									</label>
-									<input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)}/>
+									<input type="email" className="form-control" name='email'  value={formData.email} onChange={handleChange} placeholder='your@email.com' />
 									{errors.email && <div className="text-danger fs-12">{errors.email}</div>}
 								</div>
 								<div className="form-group">
 									<label className="mb-2 "><strong className="">Password</strong></label>
-									<input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)}/>
+									<input type="password" className="form-control" name='password'  value={formData.password} onChange={handleChange} placeholder='password' />
 									{errors.password && <div className="text-danger fs-12">{errors.password}</div>}
 								</div>
 								<div className="form-row d-flex justify-content-between mt-4 mb-2">
 									<div className="form-group">
 										<div className="custom-control custom-checkbox ms-1 ">
-											<input type="checkbox" className="form-check-input" id="basic_checkbox_1"/>
+											<input type="checkbox" className="form-check-input" id="basic_checkbox_1" />
 											<label className="form-check-label" htmlFor="basic_checkbox_1">Remember my preference</label>
 										</div>
 									</div>
@@ -91,8 +105,8 @@ function Login (props) {
 					<div className="col-lg-6 col-md-5 d-flex box-skew1">
 						<div className="inner-content align-self-center">
 							<Link to="/" className="login-logo">
-								<img src={logo} alt="" className="logo-icon me-2"/>
-								<img src={logotext} alt="" className="logo-text ms-1"/>
+								<img src={logo} alt="" className="logo-icon me-2" />
+								<img src={logotext} alt="" className="logo-text ms-1" />
 							</Link>
 							<h2 className="m-b10 text-white">Login To You Now</h2>
 							<p className="m-b40 text-white">User Experience & Interface Design Strategy SaaS Solutions</p>
@@ -106,15 +120,15 @@ function Login (props) {
 				</div>
 			</div>
 		</div>
-		
-    )
+
+	)
 }
 
 const mapStateToProps = (state) => {
-    return {
-        errorMessage: state.auth.errorMessage,
-        successMessage: state.auth.successMessage,
-        showLoading: state.auth.showLoading,
-    };
+	return {
+		errorMessage: state.auth.errorMessage,
+		successMessage: state.auth.successMessage,
+		showLoading: state.auth.showLoading,
+	};
 };
 export default connect(mapStateToProps)(Login);

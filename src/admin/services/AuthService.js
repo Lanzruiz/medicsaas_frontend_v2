@@ -13,42 +13,57 @@ export function signUp(email, password) {
         returnSecureToken: true,
     };
     return axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
+        // `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
+        'http://localhost:5001/api/users',
         postData,
     );
 }
 
 export function login(email, password) {
-    const postData = {
-        email,
-        password,
-        returnSecureToken: true,
-    };
+
+     const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    // const postData = {
+    //     email,
+    //     password,
+    //     returnSecureToken: true,
+    // };
+    const body = JSON.stringify({ email, password });
     return axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
-        postData,
+        // `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
+        'http://localhost:5001/api/auth',
+        body,
+        config
     );
 }
 
-export function formatError(errorResponse) {
-    switch (errorResponse.error.message) {
+export function formatError(error) {
+    const errorResponse = error?.response?.data ?? error;
+    const message =
+        errorResponse?.error?.message ??
+        errorResponse?.message ??
+        (typeof errorResponse?.error === 'string' ? errorResponse.error : undefined);
+    const errorMessage = typeof message === 'string' ? message : undefined;
+
+    switch (errorMessage) {
         case 'EMAIL_EXISTS':
-            //return 'Email already exists';
             swal("Oops", "Email already exists", "error");
-            break;
+            return 'Email already exists';
         case 'EMAIL_NOT_FOUND':
-            //return 'Email not found';
-           swal("Oops", "Email not found", "error",{ button: "Try Again!",});
-           break;
+            swal("Oops", "Email not found", "error", { button: "Try Again!" });
+            return 'Email not found';
         case 'INVALID_PASSWORD':
-            //return 'Invalid Password';
-            swal("Oops", "Invalid Password", "error",{ button: "Try Again!",});
-            break;
+            swal("Oops", "Invalid Password", "error", { button: "Try Again!" });
+            return 'Invalid Password';
         case 'USER_DISABLED':
             return 'User Disabled';
 
         default:
-            return '';
+            return errorMessage || 'An unexpected error occurred. Please try again.';
     }
 }
 
